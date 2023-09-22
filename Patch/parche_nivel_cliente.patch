@@ -11,7 +11,7 @@ index 4361d5f2ed..697ce79d71 100644
 +
  }
 diff --git a/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java b/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
-index cea49dd421..e09245e376 100644
+index cea49dd421..308a8f7c75 100644
 --- a/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
 +++ b/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
 @@ -173,6 +173,10 @@ public class ClienteForm extends BaseAction{
@@ -42,31 +42,60 @@ index cea49dd421..e09245e376 100644
  		PrendaValuadorCapturaBilleteUnico prenda = null;
  		prenda = (PrendaValuadorCapturaBilleteUnico)getSession().getAttribute("billeteUnico");
  		if (prenda!=null){
-@@ -554,7 +559,13 @@ public class ClienteForm extends BaseAction{
+@@ -554,8 +559,13 @@ public class ClienteForm extends BaseAction{
  
  			if (cliente.getNumRegistro() > 0) {
  				try {
 -				NivelClienteDTO nivelCliente = clienteManager.getNivelClienteByNumRegistro(cliente);
+-				nivelClienteActual = nivelCliente.getNivelClienteActual();
 +
 +					mostrarNivelCliente = parametroSucursalEjb.obtenerParametro(usuario.getIdSucursal(), ConstantsParametros.ID_PARAM_MOSTRAR_NIVEL_CLIENTE);
 +					if(mostrarNivelCliente != null && mostrarNivelCliente.getValor() > 0){
 +						mostrarNivelClienteSucursal = true;
 +					}
-+
 +					NivelClienteDTO nivelCliente = clienteManager.getNivelClienteByNumRegistro(cliente);
- 				nivelClienteActual = nivelCliente.getNivelClienteActual();
++				    nivelClienteActual = nivelCliente.getNivelClienteActual();
  				} catch (ServiceException e) {
  					//exceptionHandler.handle(e);
+ 					addMessage(MSG_ERROR_NIVEL_CLIENTE);
 diff --git a/web/src/main/webapp/clienteDetalle.xhtml b/web/src/main/webapp/clienteDetalle.xhtml
-index f7e9cd0414..f2eeb110c4 100644
+index f7e9cd0414..2191288bf1 100644
 --- a/web/src/main/webapp/clienteDetalle.xhtml
 +++ b/web/src/main/webapp/clienteDetalle.xhtml
-@@ -167,7 +167,7 @@
+@@ -167,16 +167,16 @@
  				</m:disablePanelGroup>
  			</h:panelGroup>
  			
 -			<h:panelGroup id="panelNivelCliente">
-+			<h:panelGroup id="panelNivelCliente" rendered="clienteForm.mostrarNivelClienteSucursal">
++			<h:panelGroup id="panelNivelCliente" rendered="#{clienteForm.mostrarNivelClienteSucursal}">
  					<fieldset>
  						<legend>#{text['cliente.lgn.nivel.cliente']}</legend>
  						<table>
+ 							<tr>
+ 								<td><h:outputText id="lblNivelCliente"
+-										value="#{text['cliente.lbl.nivel.cliente']}" rendered="true" /></td>
++										value="#{text['cliente.lbl.nivel.cliente']}" rendered="#{clienteForm.mostrarNivelClienteSucursal}" /></td>
+ 								<td><h:outputText id="nivelCliente"
+ 										title="#{text['cliente.lbl.nivel.cliente']}"
+-										value="#{clienteForm.nivelClienteActual}" rendered="true" /></td>
++										value="#{clienteForm.nivelClienteActual}" rendered="#{clienteForm.mostrarNivelClienteSucursal}" /></td>
+ 							</tr>
+ 						</table>
+ 					</fieldset>
+diff --git a/web/src/main/webapp/clienteDetalleSimuladorEmpenio.xhtml b/web/src/main/webapp/clienteDetalleSimuladorEmpenio.xhtml
+index b73dea46dc..950a38be92 100644
+--- a/web/src/main/webapp/clienteDetalleSimuladorEmpenio.xhtml
++++ b/web/src/main/webapp/clienteDetalleSimuladorEmpenio.xhtml
+@@ -72,10 +72,10 @@
+ 						</tr>
+ 						<tr>
+ 							<td><h:outputText id="lblNivelCliente"
+-											  value="#{text['cliente.lbl.nivel.cliente']}" rendered="true" /></td>
++											  value="#{text['cliente.lbl.nivel.cliente']}" rendered="#{clienteForm.mostrarNivelClienteSucursal}" /></td>
+ 							<td><h:outputText id="nivelCliente"
+ 											  title="#{text['cliente.lbl.nivel.cliente']}"
+-											  value="#{clienteForm.nivelClienteActual}" rendered="true" /></td>
++											  value="#{clienteForm.nivelClienteActual}" rendered="#{clienteForm.mostrarNivelClienteSucursal}" /></td>
+ 						</tr>
+ 						<tr>
+ 							<td>

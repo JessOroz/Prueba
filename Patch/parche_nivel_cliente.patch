@@ -1,0 +1,72 @@
+diff --git a/model-common/src/main/java/mx/com/nmp/midas/ConstantsParametros.java b/model-common/src/main/java/mx/com/nmp/midas/ConstantsParametros.java
+index 4361d5f2ed..697ce79d71 100644
+--- a/model-common/src/main/java/mx/com/nmp/midas/ConstantsParametros.java
++++ b/model-common/src/main/java/mx/com/nmp/midas/ConstantsParametros.java
+@@ -792,4 +792,7 @@ public interface ConstantsParametros extends Serializable{
+     public static final long ID_PARAM_SUCURSAL_CERTIFICADO_NO_EXHIBICION_CAJERO = 542L;
+     public static final long ID_PARAM_SUCURSAL_CERTIFICADO_NO_EXHIBICION_SUCURSAL = 543L;
+ 
++    //MIPP
++    public static final long ID_PARAM_MOSTRAR_NIVEL_CLIENTE  = 565L;
++
+ }
+diff --git a/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java b/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
+index cea49dd421..e09245e376 100644
+--- a/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
++++ b/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
+@@ -173,6 +173,10 @@ public class ClienteForm extends BaseAction{
+     //Backlog: TASK0211819
+     private Date clienteExpedienteFecha;
+ 
++	private boolean mostrarNivelClienteSucursal = false;
++
++	private UsuarioDTO usuario;
++
+ 	public ClienteForm() {
+ 		super();
+ 		listaCapturasAnteriores = new ArrayList<ClienteViewBean>(TAMANIO_LISTA_CAPTURAS_ANTERIORES);
+@@ -206,7 +210,7 @@ public class ClienteForm extends BaseAction{
+ 					}
+ 				});
+ 
+-			UsuarioDTO usuario = (UsuarioDTO) getSessionAttribute(ConstantsView.USUARIO_SESION);
++			usuario = (UsuarioDTO) getSessionAttribute(ConstantsView.USUARIO_SESION);
+ 			ParametroSucursal parametroProfecoHabilitado = parametroSucursalEjb.obtenerParametro(usuario.getIdSucursal(), ConstantsParametros.ID_PARAM_SUCURSAL_PROFECO_HABILITADO);
+ 			profecoHabilitado = Math.round(parametroProfecoHabilitado.getValor()) == 1F;
+ 			idBeneficiarioSeleccionado = -1;
+@@ -517,6 +521,7 @@ public class ClienteForm extends BaseAction{
+ 	}
+ 
+ 	public void obtenerCliente(){
++		ParametroSucursal mostrarNivelCliente;
+ 		PrendaValuadorCapturaBilleteUnico prenda = null;
+ 		prenda = (PrendaValuadorCapturaBilleteUnico)getSession().getAttribute("billeteUnico");
+ 		if (prenda!=null){
+@@ -554,7 +559,13 @@ public class ClienteForm extends BaseAction{
+ 
+ 			if (cliente.getNumRegistro() > 0) {
+ 				try {
+-				NivelClienteDTO nivelCliente = clienteManager.getNivelClienteByNumRegistro(cliente);
++
++					mostrarNivelCliente = parametroSucursalEjb.obtenerParametro(usuario.getIdSucursal(), ConstantsParametros.ID_PARAM_MOSTRAR_NIVEL_CLIENTE);
++					if(mostrarNivelCliente != null && mostrarNivelCliente.getValor() > 0){
++						mostrarNivelClienteSucursal = true;
++					}
++
++					NivelClienteDTO nivelCliente = clienteManager.getNivelClienteByNumRegistro(cliente);
+ 				nivelClienteActual = nivelCliente.getNivelClienteActual();
+ 				} catch (ServiceException e) {
+ 					//exceptionHandler.handle(e);
+diff --git a/web/src/main/webapp/clienteDetalle.xhtml b/web/src/main/webapp/clienteDetalle.xhtml
+index f7e9cd0414..f2eeb110c4 100644
+--- a/web/src/main/webapp/clienteDetalle.xhtml
++++ b/web/src/main/webapp/clienteDetalle.xhtml
+@@ -167,7 +167,7 @@
+ 				</m:disablePanelGroup>
+ 			</h:panelGroup>
+ 			
+-			<h:panelGroup id="panelNivelCliente">
++			<h:panelGroup id="panelNivelCliente" rendered="clienteForm.mostrarNivelClienteSucursal">
+ 					<fieldset>
+ 						<legend>#{text['cliente.lgn.nivel.cliente']}</legend>
+ 						<table>

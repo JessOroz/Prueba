@@ -11,7 +11,7 @@ index 4361d5f2ed..697ce79d71 100644
 +
  }
 diff --git a/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java b/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
-index cea49dd421..3edd8e7286 100644
+index cea49dd421..9691b2cdd2 100644
 --- a/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
 +++ b/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
 @@ -173,6 +173,10 @@ public class ClienteForm extends BaseAction{
@@ -65,7 +65,7 @@ index cea49dd421..3edd8e7286 100644
  				} catch (ServiceException e) {
  					//exceptionHandler.handle(e);
  					addMessage(MSG_ERROR_NIVEL_CLIENTE);
-@@ -1769,4 +1780,12 @@ public class ClienteForm extends BaseAction{
+@@ -1769,4 +1780,9 @@ public class ClienteForm extends BaseAction{
      public Date getClienteExpedienteFecha() {
          return clienteExpedienteFecha;
      }
@@ -74,9 +74,6 @@ index cea49dd421..3edd8e7286 100644
 +		return mostrarNivelClienteSucursal;
 +	}
 +
-+	public void setMostrarNivelClienteSucursal(boolean mostrarNivelClienteSucursal) {
-+		this.mostrarNivelClienteSucursal = mostrarNivelClienteSucursal;
-+	}
  }
 diff --git a/web/src/main/webapp/clienteDetalle.xhtml b/web/src/main/webapp/clienteDetalle.xhtml
 index f7e9cd0414..2191288bf1 100644

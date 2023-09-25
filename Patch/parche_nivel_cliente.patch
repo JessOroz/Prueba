@@ -116,3 +116,43 @@ index b73dea46dc..950a38be92 100644
  						</tr>
  						<tr>
  							<td>
+diff --git a/web/src/main/webapp/clienteFiltroBusqueda.xhtml b/web/src/main/webapp/clienteFiltroBusqueda.xhtml
+index bb0eaa8b9e..cbfeaa6453 100644
+--- a/web/src/main/webapp/clienteFiltroBusqueda.xhtml
++++ b/web/src/main/webapp/clienteFiltroBusqueda.xhtml
+@@ -27,7 +27,7 @@
+                             <c:if test="#{empty mostrarBotonBuscar || mostrarBotonBuscar == true}">
+                             	<c:if test="#{empty overrideBusquedaBean}">
+ 							<a4j:commandButton ignoreDupResponses="true" id="btnObtenerCliente" value="#{text['button.search']}" action="#{clienteForm.obtenerCliente}"
+-								reRender="pgModalAlertaCliente,pgJSCalculoAvaluo,datosAvaluo,numeroCredencial,panelCapturaCliente,panelDomicilioCliente,panelNivelCliente,panelIdenficacion,panelGroupEmpresa,panelGroupCotitular,panelGroupCampania,panelBotones,modalClienteBoletinado,pgScriptClienteBoletinado,pgScriptCapturaNombreCompleto,pnlVerificarHuella, pnlAutorizarGerente,modalAlertaCliente,generarContrato,generarTalonesAmarre,imprimirReferencias"
++								reRender="pgModalAlertaCliente,pgJSCalculoAvaluo,datosAvaluo,numeroCredencial,panelCapturaCliente,panelDomicilioCliente,panelNivelCliente,panelIdenficacion,panelGroupEmpresa,panelGroupCotitular,panelGroupCampania,panelBotones,modalClienteBoletinado,pgScriptClienteBoletinado,pgScriptCapturaNombreCompleto,pnlVerificarHuella, pnlAutorizarGerente,modalAlertaCliente,generarContrato,generarTalonesAmarre,imprimirReferencias,lblNivelCliente,nivelCliente"
+ 								oncomplete="
+ 										if (#{!clienteForm.verificarHuellaClienteForm.mostrarVerificarHuella}){
+ 											if (#{clienteForm.cliente.boletinado}){
+@@ -71,7 +71,7 @@
+ 
+ 							<c:if test="#{empty mostrarBotonNuevo || mostrarBotonNuevo == true}">
+ 								<a4j:commandButton ignoreDupResponses="true" id="btnNuevo" value="#{text['cliente.button.new']}" action="#{clienteForm.limpiarCampos}"
+-									reRender="pgJSCalculoAvaluo,datosAvaluo,numeroCredencial,panelEtiquetaNumEncontrada,panelNumeroEncontrado,panelCapturaCliente,panelDomicilioCliente,panelNivelCliente,panelIdenficacion,panelGroupEmpresa,panelGroupCotitular,panelGroupCampania,modalAutorizacionGerentee,pgScriptCapturaNombreCompleto,pgScriptClienteBoletinado,pgNuevaPartida,panelGroupAutomovil,btnCompraEmpenio,generarContrato,generarTalonesAmarre,imprimirReferencias" ajaxSingle="true"
++									reRender="pgJSCalculoAvaluo,datosAvaluo,numeroCredencial,panelEtiquetaNumEncontrada,panelNumeroEncontrado,panelCapturaCliente,panelDomicilioCliente,panelNivelCliente,panelIdenficacion,panelGroupEmpresa,panelGroupCotitular,panelGroupCampania,modalAutorizacionGerentee,pgScriptCapturaNombreCompleto,pgScriptClienteBoletinado,pgNuevaPartida,panelGroupAutomovil,btnCompraEmpenio,generarContrato,generarTalonesAmarre,imprimirReferencias,lblNivelCliente,nivelCliente" ajaxSingle="true"
+ 								oncomplete="navigatorEngine.setAfterResetFocus('#{ifClienteNuevo}'); navigatorEngine.resetRoot(null);limpiarTotales();"
+ 									disabled="#{clienteForm.clienteDeshabilitado}" />
+ 							</c:if>
+@@ -84,7 +84,7 @@
+                                                navigatorEngine.resetRootForRichModalId('modalAutorizacionGerente')}"
+                                                action="#{clienteForm.limpiarCampos}"
+                                                style="display:none"
+-                                               reRender="pgJSCalculoAvaluo,datosAvaluo,numeroCredencial,panelEtiquetaNumEncontrada,panelNumeroEncontrado,panelCapturaCliente,panelDomicilioCliente,panelNivelCliente,panelIdenficacion,panelGroupEmpresa,panelGroupCotitular,pgScriptCapturaNombreCompleto,pgScriptClienteBoletinado,btnCompraEmpenio"
++                                               reRender="pgJSCalculoAvaluo,datosAvaluo,numeroCredencial,panelEtiquetaNumEncontrada,panelNumeroEncontrado,panelCapturaCliente,panelDomicilioCliente,panelNivelCliente,panelIdenficacion,panelGroupEmpresa,panelGroupCotitular,pgScriptCapturaNombreCompleto,pgScriptClienteBoletinado,btnCompraEmpenio,lblNivelCliente,nivelCliente"
+                                                disabled="#{!clienteForm.deshabilitarCampos}" immediate="true"
+                                                rendered="#{clienteForm.mostrarBotonAutorizacionNuevoCliente}"/>
+ 						</td>
+@@ -167,7 +167,7 @@
+                                        action="#{clienteForm.autorizarNuevoCliente}"
+                                        oncomplete="javascript:if(#{empty facesContext.maximumSeverity}){Richfaces.hideModalPanel('modalAutorizacionGerente');}
+                                        navigatorEngine.setAfterResetFocus('capturaAvaluo:nombre');navigatorEngine.resetRoot(null);"
+-                                       reRender="inputClaveGerente,inputJustificacion,numeroCredencial,panelCapturaCliente,panelDomicilioCliente,panelNivelCliente,panelIdenficacion,panelGroupEmpresa,panelGroupCotitular,panelBotones,modalClienteBoletinado,pgScriptClienteBoletinado,pgScriptCapturaNombreCompleto" />
++                                       reRender="inputClaveGerente,inputJustificacion,numeroCredencial,panelCapturaCliente,panelDomicilioCliente,panelNivelCliente,panelIdenficacion,panelGroupEmpresa,panelGroupCotitular,panelBotones,modalClienteBoletinado,pgScriptClienteBoletinado,pgScriptCapturaNombreCompleto,lblNivelCliente,nivelCliente" />
+                     <h:commandButton value="#{text['button.cancel']}"
+                                      onclick="javascript:Richfaces.hideModalPanel('modalAutorizacionGerente');return false;" />
+                 </m:modalButtons>

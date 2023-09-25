@@ -11,21 +11,21 @@ index 4361d5f2ed..697ce79d71 100644
 +
  }
 diff --git a/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java b/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
-index cea49dd421..308a8f7c75 100644
+index cea49dd421..3edd8e7286 100644
 --- a/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
 +++ b/web/src/main/java/mx/com/nmp/midas/webapp/action/ClienteForm.java
 @@ -173,6 +173,10 @@ public class ClienteForm extends BaseAction{
      //Backlog: TASK0211819
      private Date clienteExpedienteFecha;
  
-+	private boolean mostrarNivelClienteSucursal = false;
++	private boolean mostrarNivelClienteSucursal;
 +
 +	private UsuarioDTO usuario;
 +
  	public ClienteForm() {
  		super();
  		listaCapturasAnteriores = new ArrayList<ClienteViewBean>(TAMANIO_LISTA_CAPTURAS_ANTERIORES);
-@@ -206,7 +210,7 @@ public class ClienteForm extends BaseAction{
+@@ -206,13 +210,14 @@ public class ClienteForm extends BaseAction{
  					}
  				});
  
@@ -34,7 +34,14 @@ index cea49dd421..308a8f7c75 100644
  			ParametroSucursal parametroProfecoHabilitado = parametroSucursalEjb.obtenerParametro(usuario.getIdSucursal(), ConstantsParametros.ID_PARAM_SUCURSAL_PROFECO_HABILITADO);
  			profecoHabilitado = Math.round(parametroProfecoHabilitado.getValor()) == 1F;
  			idBeneficiarioSeleccionado = -1;
-@@ -517,6 +521,7 @@ public class ClienteForm extends BaseAction{
+ 
+ 			campaniasActivas = new ArrayList<CampaniaOperacionDTO>();
+ 			canalesActivos = new ArrayList<CanalOrigenDTO>();
++			mostrarNivelClienteSucursal = Boolean.FALSE;
+ 
+ 		} catch (ServiceException e) {
+ 			exceptionHandler.handle(e);
+@@ -517,6 +522,7 @@ public class ClienteForm extends BaseAction{
  	}
  
  	public void obtenerCliente(){
@@ -42,22 +49,35 @@ index cea49dd421..308a8f7c75 100644
  		PrendaValuadorCapturaBilleteUnico prenda = null;
  		prenda = (PrendaValuadorCapturaBilleteUnico)getSession().getAttribute("billeteUnico");
  		if (prenda!=null){
-@@ -554,8 +559,13 @@ public class ClienteForm extends BaseAction{
+@@ -554,8 +560,13 @@ public class ClienteForm extends BaseAction{
  
  			if (cliente.getNumRegistro() > 0) {
  				try {
 -				NivelClienteDTO nivelCliente = clienteManager.getNivelClienteByNumRegistro(cliente);
 -				nivelClienteActual = nivelCliente.getNivelClienteActual();
-+
 +					mostrarNivelCliente = parametroSucursalEjb.obtenerParametro(usuario.getIdSucursal(), ConstantsParametros.ID_PARAM_MOSTRAR_NIVEL_CLIENTE);
 +					if(mostrarNivelCliente != null && mostrarNivelCliente.getValor() > 0){
 +						mostrarNivelClienteSucursal = true;
 +					}
++
 +					NivelClienteDTO nivelCliente = clienteManager.getNivelClienteByNumRegistro(cliente);
 +				    nivelClienteActual = nivelCliente.getNivelClienteActual();
  				} catch (ServiceException e) {
  					//exceptionHandler.handle(e);
  					addMessage(MSG_ERROR_NIVEL_CLIENTE);
+@@ -1769,4 +1780,12 @@ public class ClienteForm extends BaseAction{
+     public Date getClienteExpedienteFecha() {
+         return clienteExpedienteFecha;
+     }
++
++	public boolean isMostrarNivelClienteSucursal() {
++		return mostrarNivelClienteSucursal;
++	}
++
++	public void setMostrarNivelClienteSucursal(boolean mostrarNivelClienteSucursal) {
++		this.mostrarNivelClienteSucursal = mostrarNivelClienteSucursal;
++	}
+ }
 diff --git a/web/src/main/webapp/clienteDetalle.xhtml b/web/src/main/webapp/clienteDetalle.xhtml
 index f7e9cd0414..2191288bf1 100644
 --- a/web/src/main/webapp/clienteDetalle.xhtml
